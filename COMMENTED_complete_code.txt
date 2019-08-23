@@ -1,0 +1,56 @@
+// Purple Rain
+// (138, 43, 226)
+// (230, 230, 250) background
+
+//this is the class Drop:
+class Drop {
+  float x; // variables for x,y,z coordinates
+  float y;
+  float z;
+  float len; //length of each droplet
+  float yspeed; //speed that the drops will fall
+
+  Drop() { //this is the constructor, it is what runs whenever the word "new" is used
+    x  = random(width); //start our variables at random locations
+    y  = random(-500, -50); //start the y value just above the screen
+    z  = random(0, 20);
+    len = map(z, 0, 20, 10, 20); //the length of the rain is related to how close it is (challenge)
+    yspeed  = map(z, 0, 20, 1, 20); //the speed is also related to how close it is (challenge)
+  }
+
+  void fall() {
+    y = y + yspeed; //y moves down by yspeed pixels every time
+    float grav = map(z, 0, 20, 0, 0.2); //variable for gravity
+    yspeed = yspeed + grav; //a small number, grav, is added to the speed every time so it accelerates
+
+    if (y > height) { //if the rain has fallen off the screen
+      y = random(-200, -100); //reset its position to the top
+      yspeed = map(z, 0, 20, 4, 10); //and reset its speed
+    }
+  }
+
+  void show() {
+    float thick = map(z, 0, 20, 1, 3); //variable for thickness of the line
+    strokeWeight(thick); //use the strokeWeight function to set the thickness
+    stroke(138, 43, 226); //set the colour of the line
+    line(x, y, x, y+len); //draw it!
+  }
+}
+
+//------start of my main program-------
+Drop[] drops = new Drop[500]; //make an array of water droplets
+
+void setup() { //this function runs once at the start of the program
+  size(640, 360); //set the size of the screen
+  for (int i = 0; i < drops.length; i++) { //for each of the water droplets, we initialze it to a new droplet
+    drops[i] = new Drop();
+  }
+}
+
+void draw() { //this function runs many times in one second
+  background(230, 230, 250); //set the background colour
+  for (int i = 0; i < drops.length; i++) { //for each of the water droplets, it must fall and be shown
+    drops[i].fall();
+    drops[i].show();
+  }
+}
